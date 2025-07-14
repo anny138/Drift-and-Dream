@@ -8,8 +8,8 @@ const CartPage=()=>{
   const totalQuantity = cartItems.reduce((sum,item)=>{
     return sum+item.quantity;
   },0);
-  if (cartItems.length===0) {
-    return (
+  if (cartItems.length===0){
+    return(
       <Container className="text-center mt-5">
         <h2>Your Cart is Empty</h2>
         <p>Nothing here yet. Add some stuff and come back!</p>
@@ -22,7 +22,7 @@ const CartPage=()=>{
   const subtotal=getCartTotal();
   const taxAmount=subtotal*0.08; 
   const total=subtotal+taxAmount;
-  return (
+  return(
     <Container className="mt-4">
       <Row>
         <Col md={8}>

@@ -1,14 +1,14 @@
-import {createContext,useState,useEffect } from 'react';
+import {createContext,useState,useEffect} from 'react';
 export const ProductContext = createContext();
-export const ProductProvider = ({children}) => {
+export const ProductProvider = ({children})=>{
   const [products,setProducts] = useState([]); 
   const [loading,setLoading] = useState(true); 
-  useEffect(() => {
-    const fetchProducts= async () => {
+  useEffect(()=>{
+    const fetchProducts = async()=>{
       try{
-        const res = await fetch('http://localhost:3001/products');
-        const data = await res.json();
-        if(Array.isArray(data)) {
+        const res=await fetch('http://localhost:3001/products');
+        const data=await res.json();
+        if(Array.isArray(data)){
           setProducts(data);
         } 
         else{
@@ -16,7 +16,7 @@ export const ProductProvider = ({children}) => {
           setProducts([]); 
         }
       } 
-      catch(err) {
+      catch(err){
         console.error('Problem fetching products:',err);
         setProducts([
             {
@@ -129,13 +129,13 @@ export const ProductProvider = ({children}) => {
             },
         ]);    
       } 
-      finally {
+      finally{
         setLoading(false);
       }
     };
     fetchProducts();
   },[]);
-  return (
+  return(
     <ProductContext.Provider value={{products,loading}}>
       {children}
     </ProductContext.Provider>

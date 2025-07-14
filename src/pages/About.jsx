@@ -1,5 +1,5 @@
 const About=()=>{
-  return (
+  return(
     <div className="container mt-5">
       <h2>About Drift & Dream</h2>
       <p>

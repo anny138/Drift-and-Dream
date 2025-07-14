@@ -1,16 +1,23 @@
 import {useState} from 'react';
-import {Container,Form,Button,Card,Alert} from 'react-bootstrap';
-const Login = () => {
-  const [email,setEmail] = useState('');       
-  const [password,setPassword] = useState(''); 
-  const [showAlert,setShowAlert] = useState(false); 
+import {Container,Form,Button,Card,Alert } from 'react-bootstrap';
+import {useUser} from '../context/UserContext';
+import {useNavigate} from 'react-router-dom';
+const Login =()=>{
+  const {login} = useUser();
+  const [email,setEmail] = useState('');
+  const [password,setPassword] = useState('');
+  const [showAlert,setShowAlert] = useState(false);
+  const navigate = useNavigate();
   const handleSubmit=(e)=>{
     e.preventDefault();
-    if(email&&password){
+    if (email && password){
+      const name = email.split('@')[0];
+      login(name);
       setShowAlert(true);
-      setTimeout(() => {
+      setTimeout(()=>{
         setShowAlert(false);
-      }, 3000);
+        navigate('/');
+      }, 1500);
     }
   };
   return(
@@ -20,11 +27,7 @@ const Login = () => {
           <Card>
             <Card.Body>
               <Card.Title className="text-center mb-4">Login</Card.Title>
-              {showAlert && (
-                <Alert variant="success">
-                  Login successful!
-                </Alert>
-              )}
+              {showAlert && <Alert variant="success">Login successful!</Alert>}
               <Form onSubmit={handleSubmit}>
                 <Form.Group className="mb-3">
                   <Form.Label>Email</Form.Label>
@@ -32,7 +35,7 @@ const Login = () => {
                     type="email"
                     placeholder="Enter your email"
                     value={email}
-                    onChange={(e)=>setEmail(e.target.value)}
+                    onChange={(e) => setEmail(e.target.value)}
                     required
                   />
                 </Form.Group>
@@ -42,7 +45,7 @@ const Login = () => {
                     type="password"
                     placeholder="******"
                     value={password}
-                    onChange={(e)=>setPassword(e.target.value)}
+                    onChange={(e) => setPassword(e.target.value)}
                     required
                   />
                 </Form.Group>

@@ -1,10 +1,10 @@
-import {createContext,useState,useEffect } from 'react';
+import {createContext,useState,useEffect} from 'react';
 export const CartContext = createContext();
 export const CartProvider = ({children}) => {
   const [cartItems,setCartItems] = useState([]); 
-  useEffect(() => {
+  useEffect(()=>{
     const maybeSavedCart = localStorage.getItem('amazonCloneCart');
-    if (maybeSavedCart) {
+    if(maybeSavedCart){
       try {
         const parsedCart = JSON.parse(maybeSavedCart);
         setCartItems(parsedCart);
@@ -12,26 +12,26 @@ export const CartProvider = ({children}) => {
         console.error('Failed to parse cart from storage:',err);
       }
     }
-  }, []); 
-  useEffect(() => {
+  },[]); 
+  useEffect(()=>{
     localStorage.setItem('amazonCloneCart',JSON.stringify(cartItems));
   },[cartItems]); 
   const addToCart =(incomingProduct)=>{
     setCartItems(currentItems => {
       const found = currentItems.find(ci=>ci.id===incomingProduct.id);
       if(found){
-        return currentItems.map(ci=>ci.id===incomingProduct.id ? {...ci,quantity:ci.quantity+1}:ci);
+        return currentItems.map(ci=>ci.id===incomingProduct.id ? {...ci,quantity:ci.quantity+1}: ci);
       }
       return [...currentItems,{...incomingProduct,quantity:1}];
     });
   };
-  const removeFromCart = (idToRemove) => {
+  const removeFromCart=(idToRemove)=>{
     setCartItems(currentList =>{
       return currentList.filter(item =>item.id!==idToRemove);
     });
   };
-  const updateQuantity = (targetId,qty) => {
-    if(qty<=0) {
+  const updateQuantity = (targetId,qty)=>{
+    if(qty<=0){
       removeFromCart(targetId); 
       return;
     }
@@ -39,15 +39,15 @@ export const CartProvider = ({children}) => {
       prev.map(item=>item.id===targetId?{...item,quantity:qty}:item)
     );
   };
-  const getCartTotal = () => {
+  const getCartTotal=()=>{
     let total = 0;
-    for(let i=0;i<cartItems.length;i++) {
+    for(let i=0;i<cartItems.length;i++){
       const item = cartItems[i];
       total+=item.price*item.quantity;
     }
     return total; 
   };
-  const clearCart = () => {
+  const clearCart=()=>{
     setCartItems([]);
   };
   return(

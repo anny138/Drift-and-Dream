@@ -1,9 +1,55 @@
+:root {
+  --container-max-width: 100%;
+  --container-padding: 0;
+  --column-padding: 0;
+  --row-margin: 0;
+}
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  overflow-x: hidden;
+}
 .App {
   min-height: 100vh;
   transition: all 0.3s ease;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+.full-width-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  width: 100vw;
+  max-width: 100vw;
+  padding: 0;
+  margin: 0;
+}
+.full-width-container > main {
+  flex: 1;
+}
+body .container,
+body .container-fluid {
+  max-width: var(--container-max-width);
+  padding-right: var(--container-padding);
+  padding-left: var(--container-padding);
+  margin-right: 0;
+  margin-left: 0;
+}
+body .row {
+  margin-right: var(--row-margin);
+  margin-left: var(--row-margin);
+}
+body [class^="col-"],
+body [class*=" col-"] {
+  padding-right: var(--column-padding);
+  padding-left: var(--column-padding);
 }
 .product-card {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  margin: 10px;
 }
 .product-card:hover {
   transform: translateY(-5px);
@@ -19,6 +65,10 @@
 }
 .dark-theme .card-body {
   color: #ffffff;
+}
+.dark-theme del,
+.dark-theme .text-muted {
+  color: #bbb;
 }
 .loading-spinner {
   display: flex;
