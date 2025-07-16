@@ -1,26 +1,27 @@
-import {useState,useEffect,useContext } from 'react';
-import {useParams,useNavigate } from 'react-router-dom';
-import {Container,Row,Col,Button,Badge,Spinner,Accordion } from 'react-bootstrap';
+import {useContext, useState, useEffect} from 'react';
+import {useParams, useNavigate} from 'react-router-dom';
+import {Container, Row, Col, Button, Badge, Spinner, Accordion} from 'react-bootstrap';
+import {ProductContext} from '../context/ProductContext';
 import {CartContext} from '../context/CartContext';
 import {ThemeContext} from '../context/ThemeContext';
 import {formatINR} from '../utils/currency';
-import {fetchProducts} from '../api';
 const ProductDetail = () => {
   const {id} = useParams();
   const navigate = useNavigate();
+  const {products, loading: productsLoading} = useContext(ProductContext);
   const {addToCart} = useContext(CartContext);
   const {darkMode} = useContext(ThemeContext);
-  const [product,setProduct] = useState(null);
-  const [loading,setLoading] = useState(true);
-  const [isAdding,setIsAdding] = useState(false);
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [isAdding, setIsAdding] = useState(false);
   useEffect(() => {
-    fetchProducts().then(products => {
+    if (!productsLoading) {
       const found = products.find(p => p.id === parseInt(id));
       setProduct(found || null);
       setLoading(false);
-    });
-  },[id]);
-  if (loading) {
+    }
+  }, [id,products,productsLoading]);
+  if (productsLoading || loading) {
     return (
       <Container fluid className="text-center mt-5">
         <Spinner animation="border" />
@@ -28,14 +29,40 @@ const ProductDetail = () => {
       </Container>
     );
   }
-  if(!product) {
+  if (!product) {
     return (
       <Container fluid className="text-center mt-5">
         <h2>Product not found</h2>
       </Container>
     );
   }
-  const discount = product.buy_box_price < product.price;
+  const dummyReviews = [
+    {
+      user: 'Jane Doe',
+      rating: 5,
+      title: 'Great product!',
+      comment: 'Absolutely loved it. Quality is top notch.',
+      date: '2025-07-01'
+    },
+    {
+      user: 'Arjun P.',
+      rating: 4,
+      title: 'Value for money',
+      comment: 'Very satisfied with this purchase.',
+      date: '2025-07-07'
+    }
+  ];
+  const dummyPaymentOptions = [
+    'Credit Card',
+    'Debit Card',
+    'UPI',
+    'Net Banking',
+    'Cash on Delivery'
+  ];
+  const dummySeller = 'Marketplace Seller';
+  const dummyAvailability = 'In Stock';
+  const dummyDelivery = '2-5 business days';
+  const discount = (product.buy_box_price ?? product.price) < product.price;
   const handleAdd = () => {
     setIsAdding(true);
     addToCart(product);
@@ -46,6 +73,12 @@ const ProductDetail = () => {
     navigate('/checkout');
   };
   const themeClass = darkMode ? 'bg-dark text-light' : '';
+  const paymentOptions = product.payment_options ?? dummyPaymentOptions;
+  const reviews = product.reviews ?? dummyReviews;
+  const seller = product.seller ?? dummySeller;
+  const availability = product.availability ?? dummyAvailability;
+  const delivery = product.delivery_time ?? dummyDelivery;
+  const buyBoxPrice = product.buy_box_price ?? product.price;
   return (
     <Container fluid className="mt-4 px-5">
       <Row className="gx-5 align-items-center">
@@ -65,26 +98,38 @@ const ProductDetail = () => {
                 <del className={darkMode ? 'text-secondary' : ''}>{formatINR(product.price)}</del>
               </span>
             )}
-            <span className="h4 text-danger">{formatINR(product.buy_box_price)}</span>
+            <span className="h4 text-danger">{formatINR(buyBoxPrice)}</span>
           </div>
           <div className="mb-2">
             <Badge bg="warning" text="dark" className="me-2">
-              ⭐ {product.rating.rate}
+              ⭐ {product.rating?.rate ?? 4.5}
             </Badge>
-            <small className="text-muted">({product.rating.count} reviews)</small>
+            <small className="text-muted">({product.rating?.count ?? 50} reviews)</small>
           </div>
           <p className="mt-3">{product.description}</p>
           <div className="mb-4">
             <h5>Seller</h5>
-            <p>{product.seller} <small className="text-muted">(Official Store)</small></p>
+            <p>
+              {seller} <small className="text-muted">(Official Store)</small>
+            </p>
           </div>
           <div className="mb-4">
             <h5>Availability</h5>
-            <p>{product.availability} <small className="text-muted">(Usually dispatched within 1-2 business days)</small></p>
+            <p>
+              {availability}{' '}
+              <small className="text-muted">
+                (Usually dispatched within 1-2 business days)
+              </small>
+            </p>
           </div>
           <div className="mb-4">
             <h5>Delivery</h5>
-            <p>{product.delivery_time} <small className="text-muted">(Fastest delivery options available at checkout)</small></p>
+            <p>
+              {delivery}{' '}
+              <small className="text-muted">
+                (Fastest delivery options available at checkout)
+              </small>
+            </p>
           </div>
           <Button variant="warning" size="lg" className="w-100 mb-3" onClick={handleAdd} disabled={isAdding}>
             {isAdding ? 'Adding to Cart...' : 'Add to Cart'}
@@ -97,7 +142,7 @@ const ProductDetail = () => {
               <Accordion.Header>Payment Options</Accordion.Header>
               <Accordion.Body className={themeClass}>
                 <ul className="mb-0">
-                  {product.payment_options.map((opt, i) => (
+                  {paymentOptions.map((opt, i) => (
                     <li key={i}>{opt}</li>
                   ))}
                 </ul>
@@ -106,10 +151,12 @@ const ProductDetail = () => {
             <Accordion.Item eventKey="1" className={themeClass}>
               <Accordion.Header>Customer Reviews</Accordion.Header>
               <Accordion.Body className={themeClass}>
-                {product.reviews.map((rev, i) => (
+                {reviews.map((rev, i) => (
                   <div key={i} className="mb-3">
                     <strong>{rev.user}</strong> <Badge bg="info">{rev.rating}⭐</Badge>
-                    <div><em>{rev.title}</em> - <small className="text-muted">{rev.date}</small></div>
+                    <div>
+                      <em>{rev.title}</em> - <small className="text-muted">{rev.date}</small>
+                    </div>
                     <p>{rev.comment}</p>
                     <hr />
                   </div>

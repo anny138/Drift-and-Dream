@@ -1,3 +1,7 @@
-export function formatINR(amount) {
-  return new Intl.NumberFormat('en-IN',{ style:'currency',currency:'INR' }).format(amount);
-}
+export const formatINR= (amount) => {
+  if (!amount || isNaN(amount)) return "$0.00";
+  return `$${Number(amount).toLocaleString("en-US", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  })}`;
+};
