@@ -25,14 +25,14 @@ const Products = ()=>{
       matchesCategory = selectedCategory==='all' || product.category.toLowerCase()===selectedCategory.toLowerCase();
     }
     let matchesPrice = true;
-    if(priceRange==='under1000'){
-      matchesPrice = product.price<1000;
+    if(priceRange==='under10'){
+      matchesPrice = product.price<10;
     } 
-    else if(priceRange==='1000to7000'){
-      matchesPrice = product.price>=1000&&product.price<=7000;
+    else if(priceRange==='10to700'){
+      matchesPrice = product.price>=10&&product.price<=700;
     } 
-    else if(priceRange==='over7000'){
-      matchesPrice = product.price>7000;
+    else if(priceRange==='over700'){
+      matchesPrice = product.price>700;
     }
     return matchesSearch && matchesCategory && matchesPrice;
   });
@@ -73,9 +73,9 @@ const Products = ()=>{
             className="price-select"
           >
             <option value="all">All Prices</option>
-            <option value="under1000">Under 1000</option>
-            <option value="1000to7000">1000-7000</option>
-            <option value="over7000">Over 7000</option>
+            <option value="under10">Under 10</option>
+            <option value="10to700">10-700</option>
+            <option value="over700">Over 700</option>
           </Form.Select>
         </Col>
       </Row>
