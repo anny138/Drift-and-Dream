@@ -20,21 +20,21 @@ const CheckoutPage = () => {
   });
   const [errors,setErrors] = useState({});
   const [orderPlaced,setOrderPlaced] = useState(false);
-  const handleInputChange = (e) => {
+  const handleInputChange=(e)=>{
     const {name,value} = e.target;
-    setFormData((prev) => ({...prev,[name]:value}));
+    setFormData((prev)=>({...prev,[name]:value}));
   };
   const validateForm=()=>{
     const newErrors = {};
     ['firstName','lastName','email','address','city','zipCode','paymentMethod'].forEach((field)=>{
       if (!formData[field]) newErrors[field] = 'This field is required';
     });
-    if(formData.paymentMethod === 'Card') {
+    if(formData.paymentMethod === 'Card'){
       if(!formData.cardNumber) newErrors.cardNumber = 'Card number is required';
       if(!formData.expiryDate) newErrors.expiryDate = 'Expiry date is required';
       if(!formData.cvv) newErrors.cvv = 'CVV is required';
     } 
-    else if(formData.paymentMethod === 'UPI') {
+    else if(formData.paymentMethod === 'UPI'){
       if(!formData.upiId) newErrors.upiId = 'UPI ID is required';
     } 
     else if(formData.paymentMethod === 'Amazon Pay' || formData.paymentMethod === 'Amazon Pay Later') {

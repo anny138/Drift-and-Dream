@@ -20,7 +20,7 @@ export const CartProvider = ({children}) => {
     setCartItems(currentItems => {
       const found = currentItems.find(ci=>ci.id===incomingProduct.id);
       if(found){
-        return currentItems.map(ci=>ci.id===incomingProduct.id ? {...ci,quantity:ci.quantity+1}: ci);
+        return currentItems.map(ci=>ci.id===incomingProduct.id?{...ci,quantity:ci.quantity+1}:ci);
       }
       return [...currentItems,{...incomingProduct,quantity:1}];
     });

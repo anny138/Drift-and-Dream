@@ -8,7 +8,7 @@ const CartPage=()=>{
   const totalQuantity = cartItems.reduce((sum,item)=>{
     return sum+item.quantity;
   },0);
-  if (cartItems.length===0){
+  if(cartItems.length===0){
     return(
       <Container className="text-center mt-5">
         <h2>Your Cart is Empty</h2>
@@ -28,7 +28,7 @@ const CartPage=()=>{
         <Col md={8}>
           <h2>Shopping Cart</h2>
           <ListGroup>
-            {cartItems.map((item) => (
+            {cartItems.map((item) =>(
               <ListGroup.Item key={item.id} className="mb-3">
                 <Row className="align-items-center">
                   <Col md={2}>

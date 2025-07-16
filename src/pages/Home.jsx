@@ -6,7 +6,7 @@ import ProductCard from '../components/ProductCard';
 import Banner from '../components/Banner';
 const Home=()=>{
   const {userName} = useContext(UserContext);
-  const {products,loading } = useContext(ProductContext);
+  const {products,loading} = useContext(ProductContext);
   const featured = products.slice(0,8);
   if(loading) return(
     <Container className="text-center my-5">

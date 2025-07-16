@@ -1,8 +1,8 @@
-import {createContext,useContext,useState } from 'react';
+import {createContext,useContext,useState} from 'react';
 export const UserContext = createContext();
 export const useUser = () => useContext(UserContext);
-export const UserProvider = ({ children }) => {
-  const [userName, setUserName] = useState(()=>localStorage.getItem('userName') || '');
+export const UserProvider = ({children})=>{
+  const [userName,setUserName] = useState(()=>localStorage.getItem('userName') || '');
   const login=(name)=>{
     setUserName(name);
     localStorage.setItem('userName',name);
@@ -11,7 +11,7 @@ export const UserProvider = ({ children }) => {
     setUserName('');
     localStorage.removeItem('userName');
   };
-  return (
+  return(
     <UserContext.Provider value={{userName,login,logout }}>
       {children}
     </UserContext.Provider>

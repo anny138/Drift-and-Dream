@@ -17,7 +17,7 @@ const Login =()=>{
       setTimeout(()=>{
         setShowAlert(false);
         navigate('/');
-      }, 1500);
+      },1500);
     }
   };
   return(
@@ -45,7 +45,7 @@ const Login =()=>{
                     type="password"
                     placeholder="******"
                     value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    onChange={(e)=>setPassword(e.target.value)}
                     required
                   />
                 </Form.Group>
